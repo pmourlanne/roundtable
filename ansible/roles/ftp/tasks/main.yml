@@ -1,0 +1,21 @@
+
+- name: Install vsftpd package
+  apt: pkg=vsftpd state=present
+
+- name: Make sure ftp user is present
+  user: name=ftp state=present
+
+- name: Copy configuration file
+  template:
+    src=templates/vsftpd.conf
+    dest=/etc/vsftpd.conf
+    owner=root
+    group=root
+    mode=0644
+  register: configuration_file
+
+- name: Restart ftp
+  service:
+    name=vsftpd
+    state=restarted
+  when: configuration_file.changed

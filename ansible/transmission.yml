@@ -3,6 +3,7 @@
   become: True
   roles:
     - transmission
+    - ftp
   vars_files:
     - transmission_vars.yml
     - password_vars.yml

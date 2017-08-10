@@ -20,5 +20,5 @@
 
 - name: Restart transmission daemon
   service:
-    name: transmission-daemon
-    state: started
+    name=transmission-daemon
+    state=started
