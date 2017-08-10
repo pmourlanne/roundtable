@@ -1,3 +1,4 @@
 *.pyc
+*.retry
 
 password_vars.yml
