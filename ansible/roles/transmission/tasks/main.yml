@@ -1,0 +1,24 @@
+
+- name: Installing transmission package
+  apt: pkg=transmission-daemon state=present
+
+- name: Make sure transmission user is present
+  user: name=debian-transmission state=present
+
+- name: Restart transmission daemon
+  service:
+    name: transmission-daemon
+    state: stopped
+
+- name: Copy configuration file
+  template:
+    src=templates/settings.json
+    dest=/etc/transmission-daemon/settings.json
+    owner=debian-transmission
+    group=debian-transmission
+    mode=0600
+
+- name: Restart transmission daemon
+  service:
+    name: transmission-daemon
+    state: started

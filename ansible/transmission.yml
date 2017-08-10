@@ -1,0 +1,8 @@
+
+- hosts: transmission
+  become: True
+  roles:
+    - transmission
+  vars_files:
+    - transmission_vars.yml
+    - password_vars.yml
