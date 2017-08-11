@@ -1,0 +1,33 @@
+
+- name: Install ufw
+  apt: pkg=ufw state=present
+
+- name: Allow OpenSSH
+  ufw: rule=allow name=OpenSSH
+
+- name: Allow and enable UFW
+  ufw: state=enabled policy=allow
+
+- name: Deny traffic rather than simply ignoring it
+  ufw: rule=reject port=auth log=yes
+
+- name: Allow outgoing traffic
+  ufw: rule=allow direction=out
+
+- name: Allow transmission peer port
+  ufw: rule=allow port={{ transmission_peer_port }}
+  when: "'transmission' in group_names"
+
+- name: Allow transmission rpc port
+  ufw: rule=allow port={{ transmission_rpc_port }}
+  when: "'transmission' in group_names"
+
+- name: Allow ftp port
+  ufw: rule=allow port=21
+  when: "'transmission' in group_names"
+
+- name: Deny incoming traffic (must be the last)
+  ufw: rule=deny direction=in
+
+- name: Make sure ufw service is started
+  service: name=ufw state=started
