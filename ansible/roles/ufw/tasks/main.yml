@@ -14,6 +14,9 @@
 - name: Allow outgoing traffic
   ufw: rule=allow direction=out
 
+- name: Allow http port
+  ufw: rule=allow port=80
+
 - name: Allow transmission peer port
   ufw: rule=allow port={{ transmission_peer_port }}
   when: "'transmission' in group_names"
