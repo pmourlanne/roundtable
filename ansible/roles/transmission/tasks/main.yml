@@ -5,7 +5,7 @@
 - name: Make sure transmission user is present
   user: name=debian-transmission state=present
 
-- name: Restart transmission daemon
+- name: Stop transmission daemon
   service:
     name: transmission-daemon
     state: stopped
@@ -18,7 +18,93 @@
     group=debian-transmission
     mode=0600
 
-- name: Restart transmission daemon
+- name: Start transmission daemon
   service:
     name=transmission-daemon
+    state=started
+
+- name: Create private transmission user
+  user:
+    name=debian-transmission-private
+    state=present
+    home={{ transmission_private_base_dir }}
+    groups=debian-transmission
+    append=yes
+
+- name: Create private transmission directory
+  file:
+    path={{ transmission_private_base_dir }}
+    state=directory
+    owner=root
+    group=root
+
+- name: Create private transmission downloads directory
+  file:
+    path={{ transmission_private_base_dir }}/downloads
+    state=directory
+    owner=debian-transmission-private
+    group=debian-transmission-private
+
+- name: Create private transmission config directory
+  file:
+    path={{ transmission_private_base_dir }}/.config/
+    state=directory
+    owner=root
+    group=root
+
+- name: Create private transmission config directory, step 2
+  file:
+    path={{ transmission_private_base_dir }}/.config/transmission-daemon
+    state=directory
+    owner=debian-transmission-private
+    group=debian-transmission-private
+
+- name: Create private transmission info symlink
+  file:
+    dest={{ transmission_private_base_dir }}/info
+    src={{ transmission_private_base_dir }}/.config/transmission-daemon
+    state=link
+    owner=root
+    group=root
+
+- name: Check if transmission private daemon service exists
+  stat: path=/lib/systemd/system/transmission-private-daemon.service
+  register: service_status
+
+- name: Stop transmission private daemon if exists
+  systemd:
+    name=transmission-private-daemon
+    state=stopped
+  when:
+    service_status.stat.exists
+
+- name: Copy private configuration file
+  template:
+    src=templates/settings_private.json
+    dest=/etc/transmission-daemon/settings_private.json
+    owner=debian-transmission-private
+    group=debian-transmission-private
+    mode=0600
+
+- name: Create link to private configuration file
+  file:
+    dest={{ transmission_private_base_dir }}/info/settings.json
+    src=/etc/transmission-daemon/settings_private.json
+    owner=root
+    group=root
+    state=link
+
+- name: Copy private transmission service config
+  copy:
+    src=files/transmission-private-daemon.service
+    dest=/lib/systemd/system/transmission-private-daemon.service
+    owner=root
+    group=root
+    mode=0644
+
+- name: Enable private transmission service
+  systemd:
+    daemon_reload=yes
+    name=transmission-private-daemon
+    enabled=yes
     state=started

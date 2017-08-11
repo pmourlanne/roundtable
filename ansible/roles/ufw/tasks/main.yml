@@ -22,6 +22,14 @@
   ufw: rule=allow port={{ transmission_rpc_port }}
   when: "'transmission' in group_names"
 
+- name: Allow private transmission peer port
+  ufw: rule=allow port={{ transmission_private_peer_port }}
+  when: "'transmission' in group_names"
+
+- name: Allow private transmission rpc port
+  ufw: rule=allow port={{ transmission_private_rpc_port }}
+  when: "'transmission' in group_names"
+
 - name: Allow ftp port
   ufw: rule=allow port=21
   when: "'transmission' in group_names"
