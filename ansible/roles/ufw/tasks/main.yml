@@ -37,5 +37,5 @@
 - name: Deny incoming traffic (must be the last)
   ufw: rule=deny direction=in
 
-- name: Make sure ufw service is started
-  service: name=ufw state=started
+- name: Enable ufw
+  ufw: name=ufw state=enabled
