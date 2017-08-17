@@ -1,0 +1,8 @@
+
+- hosts: ctp
+  become: True
+  roles:
+    - ctp
+  vars_files:
+    - ctp_vars.yml
+    - password_vars.yml

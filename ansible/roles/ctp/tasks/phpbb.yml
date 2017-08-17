@@ -1,0 +1,30 @@
+
+- name: Create ctp directory
+  file: path={{ ctp_base_dir }} state=directory
+
+- name: Download and extract phpbb archive
+  unarchive:
+    src={{ phpbb_url }}
+    dest={{ ctp_base_dir }}
+    remote_src=True
+
+- name: Move all phpbb files up a directory
+  shell: mv {{ ctp_base_dir }}/phpBB3/* {{ ctp_base_dir }}/
+
+- name: Move all dotted phpbb files up a directory
+  shell: mv {{ ctp_base_dir }}/phpBB3/.[!.]* {{ ctp_base_dir }}/
+
+- name: Remove now empty phpBB3 directory
+  file: path={{ ctp_base_dir }}/phpBB3 state=absent
+
+- name: Change ownership of directory
+  file:
+    dest={{ ctp_base_dir }}
+    owner=www-data
+    group=www-data
+    recurse=yes
+
+- name: Change permission of config file
+  file:
+    dest={{ ctp_base_dir }}/config.php
+    mode=0660

@@ -1,0 +1,71 @@
+
+- name: Installing php packages
+  apt: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - php7.0-cli
+    - php7.0-mysql
+    - php7.0-xml
+    - imagemagick
+    - unzip
+
+- name: Installing mysql packages
+  apt: name={{ item }} update_cache=yes force=yes
+  with_items:
+    - mysql-server-5.7
+    - libmysqlclient-dev
+
+- name: Installing apache package
+  apt: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - apache2
+    - libapache2-mod-php7.0
+
+- name: Installing nginx
+  apt: pkg=nginx state=present update_cache=yes
+
+- name: Installing pip
+  apt: name=python-pip
+
+- name: Installing the Python MySQLB module  # Requirement for mysql_db and mysql_user
+  pip: name=MySQL-python
+
+- name: Creating mysql database
+  mysql_db: name={{ ctp_db_name }} state=present
+
+- name: Creating mysql user
+  mysql_user:
+    name: "{{ ctp_db_username }}"
+    password: "{{ ctp_db_password }}"
+    priv: "{{ ctp_db_name }}.*:ALL"
+    host: localhost
+    state: present
+
+- name: Check if ctp directory already exists
+  stat: path={{ ctp_base_dir }}
+  register: ctp_directory
+
+- include: phpbb.yml
+  when: not ctp_directory.stat.exists
+
+- name: Copy nginx conf
+  template:
+    src=templates/ctp_reverse_proxy.conf
+    dest=/etc/nginx/sites-enabled/ctp_reverse_proxy.conf
+
+- name: Restart nginx
+  service: name=nginx state=restarted
+
+- name: Apache should listen on port 8080
+  lineinfile:
+    path=/etc/apache2/ports.conf
+    regexp="^Listen "
+    line="Listen 8080"
+
+- name: Copy apache conf
+  template:
+    src=templates/ctp.conf
+    dest=/etc/apache2/sites-enabled/ctp.conf
+    mode=0644
+
+- name: Restart apache
+  service: name=apache2 state=restarted
