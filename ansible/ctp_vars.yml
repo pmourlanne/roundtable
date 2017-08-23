@@ -4,4 +4,4 @@ ctp_db_password: "password"  # Redefine in password_vars.yml
 ctp_base_dir: "/var/www/html/ctp"
 
 # phpbb stuff
-phpbb_url: https://www.phpbb.com/files/release/phpBB-3.2.1.zip
+phpbb_url: https://www.phpbb.com/files/release/phpBB-3.1.4.zip

@@ -1,10 +1,24 @@
 
+- name: List installed php7 packages
+  shell: dpkg -l | grep php7 | awk '{print $2}'
+  register: installed_packages
+
+- name: Make sure no php7 packages are installed
+  apt: name={{ item }} state=absent
+  with_items: "{{ installed_packages.stdout_lines }}"
+
+- apt: name=software-properties-common
+
+- name: Add ppa for php5 packages
+  apt_repository: repo=ppa:ondrej/php
+
 - name: Installing php packages
   apt: name={{ item }} update_cache=yes state=latest
   with_items:
-    - php7.0-cli
-    - php7.0-mysql
-    - php7.0-xml
+    - php5.6
+    - php5.6-cli
+    - php5.6-mysql
+    - php5.6-xml
     - imagemagick
     - unzip
 
@@ -14,11 +28,14 @@
     - mysql-server-5.7
     - libmysqlclient-dev
 
+- name: Removing apache php7 package
+  apt: name=libapache2-mod-php7.0 state=absent
+
 - name: Installing apache package
   apt: name={{ item }} update_cache=yes state=latest
   with_items:
     - apache2
-    - libapache2-mod-php7.0
+    - libapache2-mod-php5.6
 
 - name: Installing nginx
   apt: pkg=nginx state=present update_cache=yes
