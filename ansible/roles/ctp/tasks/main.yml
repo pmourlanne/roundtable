@@ -46,6 +46,18 @@
 - name: Installing the Python MySQLB module  # Requirement for mysql_db and mysql_user
   pip: name=MySQL-python
 
+- name: Configuring sql_mode
+  blockinfile:
+    path: /etc/mysql/my.cnf
+    content: |
+      [mysqld]
+      sql_mode = "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+  register: mysql_conf
+
+- name: Restart mysql if necessary
+  service: name=mysql state=restarted
+  when: mysql_conf.changed
+
 - name: Creating mysql database
   mysql_db: name={{ ctp_db_name }} state=present
 
