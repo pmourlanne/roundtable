@@ -96,5 +96,12 @@
     dest=/etc/apache2/sites-enabled/ctp.conf
     mode=0644
 
+- name: Add robots.txt
+  copy:
+    src=files/robots.txt
+    dest={{ ctp_base_dir }}
+    owner=www-data
+    group=www-data
+
 - name: Restart apache
   service: name=apache2 state=restarted
