@@ -1,0 +1,3 @@
+[submodule "ansible/roles/teamspeak"]
+	path = ansible/roles/teamspeak
+	url = git@github.com:stejoo/ansible-teamspeak.git

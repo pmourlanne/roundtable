@@ -1,0 +1,10 @@
+teamspeak_network:
+  voice:
+    default_port: 9987
+    ip: 0.0.0.0
+  filetransfer:
+    port: 30033
+    ip: 0.0.0.0
+  query:
+    port: 10011
+    ip: 0.0.0.0

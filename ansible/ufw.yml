@@ -5,3 +5,4 @@
     - ufw
   vars_files:
     - transmission_vars.yml
+    - teamspeak_vars.yml

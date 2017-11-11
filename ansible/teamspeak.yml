@@ -1,0 +1,7 @@
+
+- hosts: teamspeak
+  become: True
+  roles:
+    - teamspeak
+  vars_files:
+    - teamspeak_vars.yml

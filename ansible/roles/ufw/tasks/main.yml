@@ -37,6 +37,21 @@
   ufw: rule=allow port=21
   when: "'transmission' in group_names"
 
+- name: Allow teamspeak voice port
+  ufw: rule=allow port={{ teamspeak_network.voice.default_port }}
+  when: "'teamspeak' in group_names"
+
+- name: Allow teamspeak filetransfer port
+  ufw: rule=allow port={{ teamspeak_network.filetransfer.port }}
+  when: "'teamspeak' in group_names"
+
+- name: Allow teamspeak query port
+  ufw: rule=allow port={{ teamspeak_network.query.port }}
+  when: "'teamspeak' in group_names"
+
+- name: Remove - Deny incoming traffic (must be the last)
+  ufw: rule=deny direction=in delete=yes
+
 - name: Deny incoming traffic (must be the last)
   ufw: rule=deny direction=in
 
