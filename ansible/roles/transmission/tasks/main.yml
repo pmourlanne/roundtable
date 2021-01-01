@@ -64,8 +64,8 @@
     dest={{ transmission_private_base_dir }}/info
     src={{ transmission_private_base_dir }}/.config/transmission-daemon
     state=link
-    owner=root
-    group=root
+    owner=debian-transmission-private
+    group=debian-transmission-private
 
 - name: Check if transmission private daemon service exists
   stat: path=/lib/systemd/system/transmission-private-daemon.service
@@ -90,8 +90,8 @@
   file:
     dest={{ transmission_private_base_dir }}/info/settings.json
     src=/etc/transmission-daemon/settings_private.json
-    owner=root
-    group=root
+    owner=debian-transmission-private
+    group=debian-transmission-private
     state=link
 
 - name: Copy private transmission service config
