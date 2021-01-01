@@ -37,6 +37,10 @@
   ufw: rule=allow port=21
   when: "'transmission' in group_names"
 
+- name: Allow passive ftp ports
+  ufw: rule=allow port=10090:10100 proto=tcp
+  when: "'transmission' in group_names"
+
 - name: Allow teamspeak voice port
   ufw: rule=allow port={{ teamspeak_network.voice.default_port }}
   when: "'teamspeak' in group_names"
