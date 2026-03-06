@@ -1,13 +1,5 @@
 [petmycat]
-merlin.petmyc.at            # 163.172.44.244
 persile.petmyc.at           # 5.196.69.76
 
 [transmission]
-merlin.petmyc.at
 persile.petmyc.at
-
-[ctp]
-merlin.petmyc.at
-
-[teamspeak]
-merlin.petmyc.at
