@@ -37,6 +37,7 @@
     state=directory
     owner=root
     group=root
+    mode=755
 
 - name: Create private transmission downloads directory
   file:
