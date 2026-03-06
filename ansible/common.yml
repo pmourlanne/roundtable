@@ -1,0 +1,26 @@
+- hosts: all
+  become: yes
+  remote_user: debian
+
+  tasks:
+    - name: Ensure user exists
+      user:
+        name: pmourlanne
+        password: "!"
+        shell: /bin/bash
+        create_home: true
+        groups: sudo
+
+    - name: Let the user use sudo without password
+      copy:
+        content: pmourlanne ALL=(ALL) NOPASSWD:ALL
+        dest: /etc/sudoers.d/pmourlanne
+        owner: root
+        group: root
+        mode: '0440'
+
+    - name: Add SSH Keys
+      authorized_key:
+        user: pmourlanne
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDVOZDiYknBBiWjnwN/dWIIC4dm87N9U/OmwGCewXi4m/zTh+4ZAtzFNL1jFq+OACGiVGaKbY+vau/GqXlxHBxPUwowTRX9kZmgwgEWlTT4DtyL1uzQKCMTkOP14KfAeK1itlN2Rr0pUtYTznuAd2utRTbUg0UdHN1X94UJxkr22JZZuqKRjzdCndH7n2WhhtsFASgmHpawsERWd9sfpkYgr4OO0EnNFGgz0LzX7ryDD+q7LTZoz3GQrsi7xyrm0zsn//zAxJr1R2VTQIUjdQHfqVzBu6ol/KC5HId/JSOmGEFtJLPP6MMNLYIcD6BN6qy5xKcdjIsbmt4Fj61NZJRL"
+        state: present

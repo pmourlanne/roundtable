@@ -2,3 +2,4 @@
 *.retry
 
 password_vars.yml
+venv
